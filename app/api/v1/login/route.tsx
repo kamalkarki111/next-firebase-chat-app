@@ -15,8 +15,10 @@ export const POST = async (request:any,response:NextApiResponse) => {
 
     console.log(compare)
 
+    var isValidcall:boolean = false;
+
     if(user){
-        var isValidcall = await compare(password+'', user.password)
+        isValidcall = await compare(password+'', user.password)
     }
 
     if(isValidcall){
