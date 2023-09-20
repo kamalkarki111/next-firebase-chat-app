@@ -5,45 +5,47 @@ import { DoorSlidingRounded } from '@mui/icons-material'
 import { DialogContent, DialogTitle, FormControl, FormLabel, Input, Modal, ModalDialog, Stack } from '@mui/joy'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 export default function Home() {
 
-  const [openJoinRoomPopup, setJoinRoomPopup ] = useState(false);
+  const [openJoinRoomPopup, setJoinRoomPopup] = useState(false);
   const [openCreateRoomPupup, setOpenCreateRoomPopup] = useState(false);
 
-  const router  = useRouter()
+  const router = useRouter()
 
   const auth = useAuth();
 
-  if(!auth.auth.username){
-    router.push('/register');
-  }
+  useEffect(() => {
+    if (!auth.auth.username) {
+      router.push('/register');
+    }
+  }, [auth.auth.username, router])
 
 
-  const joinRoom = (ev:any)=>{
-    fetch('/api/v1/join',{
+  const joinRoom = (ev: any) => {
+    fetch('/api/v1/join', {
       method: "POST",
       body: JSON.stringify({
-      id : ev.target[0].value,
+        id: ev.target[0].value,
       })
-    }).then((val)=>{
-      if(val.status === 200){
+    }).then((val) => {
+      if (val.status === 200) {
         router.push('/room?id=' + ev.target[0].value);
       }
     })
   }
 
-  const createRoom = (ev:any)=>{
-    fetch('/api/v1/create',{
+  const createRoom = (ev: any) => {
+    fetch('/api/v1/create', {
       method: "POST",
       body: JSON.stringify({
-      name : ev.target[0].value,
+        name: ev.target[0].value,
       })
-    }).then( (val)=>{
+    }).then((val) => {
       debugger
-      if(val.status === 200){
-        val.json().then((data)=>{
+      if (val.status === 200) {
+        val.json().then((data) => {
           router.push('/room?id=' + data.id);
         });
       }
@@ -53,8 +55,8 @@ export default function Home() {
   return (
     <div className='flex h-full w-full align-items-center justify-items-center'>
       <ButtonGroup className='w-full'>
-        <Button className='w-1/2' onClick={()=>setJoinRoomPopup(true)} size={'large'} startIcon={<DoorSlidingRounded/>} color='primary' variant={'contained'}> Join Room </Button>
-        <Button className='w-1/2' onClick={()=>setOpenCreateRoomPopup(true)} size={'large'} startIcon={<DoorSlidingRounded/>} color='secondary' variant={'outlined'}> Create Room </Button>
+        <Button className='w-1/2' onClick={() => setJoinRoomPopup(true)} size={'large'} startIcon={<DoorSlidingRounded />} color='primary' variant={'contained'}> Join Room </Button>
+        <Button className='w-1/2' onClick={() => setOpenCreateRoomPopup(true)} size={'large'} startIcon={<DoorSlidingRounded />} color='secondary' variant={'outlined'}> Create Room </Button>
       </ButtonGroup>
       <Modal open={openJoinRoomPopup} onClose={() => setJoinRoomPopup(false)}>
         <ModalDialog>

@@ -20,6 +20,13 @@ export default function Register() {
 
   const router = useRouter();
 
+  React.useEffect(() => {
+    if (auth.auth.username) {
+      router.push('/');
+    }
+  }, [auth.auth.username, router])
+
+
   function register(ev: any) {
     console.log(ev)
     fetch("/api/v1/register", {

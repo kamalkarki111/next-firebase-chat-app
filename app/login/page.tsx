@@ -16,31 +16,33 @@ import Link from 'next/link';
 
 export default function Login() {
 
-    const router = useRouter();
+  const router = useRouter();
 
-    const auth = useAuth();
+  const auth = useAuth();
 
-    if(auth.auth.username){
+  React.useEffect(() => {
+    if (auth.auth.username) {
       router.push('/');
     }
+  }, [auth.auth.username, router])
 
-    function login(ev:any){
-        console.log(ev)
-        fetch("/api/v1/login", {
-            method: "POST",
-            body: JSON.stringify({
-              username : ev.target[0].value,
-              password : ev.target[1].value
-            }),
-        }).then((response:any)=>{
-            response.json().then((data:any)=>{
-                if(data.username){
-                    auth.setAuth(data);
-                    router.push('/');
-                }
-            })
-        });
-    }
+  function login(ev: any) {
+    console.log(ev)
+    fetch("/api/v1/login", {
+      method: "POST",
+      body: JSON.stringify({
+        username: ev.target[0].value,
+        password: ev.target[1].value
+      }),
+    }).then((response: any) => {
+      response.json().then((data: any) => {
+        if (data.username) {
+          auth.setAuth(data);
+          router.push('/');
+        }
+      })
+    });
+  }
 
   return (
     <React.Fragment>
@@ -60,7 +62,7 @@ export default function Login() {
               </FormControl>
               <FormControl>
                 <FormLabel>Password</FormLabel>
-                <Input variant='soft' color='neutral' required type={'password'}/>
+                <Input variant='soft' color='neutral' required type={'password'} />
               </FormControl>
               <Button type="submit">Login</Button>
             </Stack>
