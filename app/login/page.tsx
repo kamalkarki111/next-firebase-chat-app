@@ -12,6 +12,7 @@ import Stack from '@mui/joy/Stack';
 import Add from '@mui/icons-material/Add';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
+import Link from 'next/link';
 
 export default function Login() {
 
@@ -64,6 +65,7 @@ export default function Login() {
               <Button type="submit">Login</Button>
             </Stack>
           </form>
+          <Link href={'/register'}>New here...?</Link>
         </ModalDialog>
       </Modal>
     </React.Fragment>
