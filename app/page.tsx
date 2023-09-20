@@ -5,6 +5,7 @@ import { DoorSlidingRounded } from '@mui/icons-material'
 import { DialogContent, DialogTitle, FormControl, FormLabel, Input, Modal, ModalDialog, Stack } from '@mui/joy'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
+import React from 'react'
 import { useEffect, useState } from 'react'
 
 export default function Home() {
@@ -54,10 +55,16 @@ export default function Home() {
 
   return (
     <div className='flex h-full w-full align-items-center justify-items-center'>
-      <ButtonGroup className='w-full'>
-        <Button className='w-1/2' onClick={() => setJoinRoomPopup(true)} size={'large'} startIcon={<DoorSlidingRounded />} color='primary' variant={'contained'}> Join Room </Button>
-        <Button className='w-1/2' onClick={() => setOpenCreateRoomPopup(true)} size={'large'} startIcon={<DoorSlidingRounded />} color='secondary' variant={'outlined'}> Create Room </Button>
-      </ButtonGroup>
+      <React.Fragment>
+        <Modal open={true}>
+          <ModalDialog size='lg' variant='soft' color='success'>
+            <ButtonGroup className='w-full'>
+              <Button className='w-1/2' onClick={() => setJoinRoomPopup(true)} size={'large'} startIcon={<DoorSlidingRounded />} color='primary' variant={'contained'}> Join Room </Button>
+              <Button className='w-1/2' onClick={() => setOpenCreateRoomPopup(true)} size={'large'} startIcon={<DoorSlidingRounded />} color='secondary' variant={'outlined'}> Create Room </Button>
+            </ButtonGroup>
+          </ModalDialog>
+        </Modal>
+      </React.Fragment>
       <Modal open={openJoinRoomPopup} onClose={() => setJoinRoomPopup(false)}>
         <ModalDialog>
           <DialogTitle>Join Room</DialogTitle>
