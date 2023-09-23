@@ -2,6 +2,10 @@ import { AuthProvider } from '@/context/auth.context'
 import './globals.css'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
+import { LoaderProvider } from '@/context/loader.context'
+import Header from '@/components/header.component'
+import Footer from '@/components/footer.component'
+import Loader from './loader'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -16,14 +20,19 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
 
-
   return (
-    <html lang="en" style={{height:'100%'}}>
-      <body style={{height:'100%'}}>
-        <AuthProvider>
-          {children}
-        </AuthProvider>
-        </body>
+    <html lang="en" style={{ height: '100%' }}>
+      <body style={{ height: '100%' }}>
+        <LoaderProvider>
+          <AuthProvider>
+            <Header/>
+            {children}
+            <Footer/>
+          </AuthProvider>
+          <Loader />
+        </LoaderProvider>
+
+      </body>
     </html>
   )
 }

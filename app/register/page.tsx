@@ -1,20 +1,36 @@
 'use client'
 import * as React from 'react';
-import Button from '@mui/joy/Button';
-import FormControl from '@mui/joy/FormControl';
-import FormLabel from '@mui/joy/FormLabel';
-import Input from '@mui/joy/Input';
-import Modal from '@mui/joy/Modal';
-import ModalDialog from '@mui/joy/ModalDialog';
-import DialogTitle from '@mui/joy/DialogTitle';
-import DialogContent from '@mui/joy/DialogContent';
-import Stack from '@mui/joy/Stack';
-import Add from '@mui/icons-material/Add';
+import Avatar from '@mui/material/Avatar';
+import Button from '@mui/material/Button';
+import CssBaseline from '@mui/material/CssBaseline';
+import TextField from '@mui/material/TextField';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import Link from '@mui/material/Link';
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import Typography from '@mui/material/Typography';
+import Container from '@mui/material/Container';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useAuth } from '@/hooks/useAuth';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
+import { LoaderContext } from '@/context/loader.context';
 
-export default function Register() {
+function Copyright(props: any) {
+  return (
+    <Typography variant="body2" color="text.secondary" align="center" {...props}>
+      {'Copyright © KSK'}
+      {new Date().getFullYear()}
+      {'.'}
+    </Typography>
+  );
+}
+
+// TODO remove, this demo shouldn't need to reset the theme.
+const defaultTheme = createTheme();
+
+export default function SignUp() {
 
   const auth = useAuth();
 
@@ -26,51 +42,103 @@ export default function Register() {
     }
   }, [auth.auth.username, router])
 
+  const Loader = React.useContext(LoaderContext)
+  
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
 
-  function register(ev: any) {
-    console.log(ev)
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+
+    Loader.setShowLoader(true);
+
     fetch("/api/v1/register", {
       method: "POST",
       body: JSON.stringify({
-        username: ev.target[0].value,
-        password: ev.target[1].value
+        username: data.get('username'),
+        password: data.get('password')
       }),
     }).then((response: any) => {
-      response.json().then((data: any) => {
-        if (data.username) {
-          auth.setAuth(data);
-          router.push('/');
-        }
-      })
+      if(response.status === 200){
+
+        response.json().then((data: any) => {
+          if (data.username) {
+            auth.setAuth(data);
+            router.push('/');
+          }
+          Loader.setShowLoader(false)
+        })
+      } else {
+        Loader.setShowLoader(false)
+      }
+    },(err)=>{
+      Loader.setShowLoader(false)
+    }).catch(()=>{
+      Loader.setShowLoader(false)
     });
-  }
+  };
 
   return (
-    <React.Fragment>
-      <Modal open={true}>
-        <ModalDialog size='lg' variant='soft' color='danger'>
-          <DialogTitle>Registration</DialogTitle>
-          <form
-            onSubmit={(event: React.FormEvent<HTMLFormElement>) => {
-              event.preventDefault();
-              register(event)
-            }}
-          >
-            <Stack spacing={2}>
-              <FormControl color='danger'>
-                <FormLabel >UserName</FormLabel>
-                <Input variant='soft' color='success' autoFocus required />
-              </FormControl>
-              <FormControl>
-                <FormLabel >Password</FormLabel>
-                <Input variant='soft' color='success' required type={'password'} />
-              </FormControl>
-              <Button type="submit">Register</Button>
-            </Stack>
-          </form>
-          <Link href='/login'>Have account...?</Link>
-        </ModalDialog>
-      </Modal>
-    </React.Fragment>
+    <ThemeProvider theme={defaultTheme}>
+      <Container component="main" maxWidth="xs">
+        <CssBaseline />
+        <Box
+          sx={{
+            marginTop: 8,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}
+        >
+          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            Sign up
+          </Typography>
+          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  id="username"
+                  label="Username "
+                  name="username"
+                  autoComplete="username"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  name="password"
+                  label="Password"
+                  type="password"
+                  id="password"
+                  autoComplete="new-password"
+                />
+              </Grid>
+              
+            </Grid>
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+            >
+              Sign Up
+            </Button>
+            <Grid container justifyContent="flex-end">
+              <Grid item>
+                <Link href="/login" >
+                  Already have an account? Sign in
+                </Link>
+              </Grid>
+            </Grid>
+          </Box>
+        </Box>
+        <Copyright sx={{ mt: 5 }} />
+      </Container>
+    </ThemeProvider>
   );
 }

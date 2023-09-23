@@ -1,28 +1,45 @@
 'use client'
-import { useAuth } from '@/hooks/useAuth'
-import { Button, ButtonGroup } from '@material-ui/core'
-import { DoorSlidingRounded } from '@mui/icons-material'
-import { DialogContent, DialogTitle, FormControl, FormLabel, Input, Modal, ModalDialog, Stack } from '@mui/joy'
-import Image from 'next/image'
-import { useRouter } from 'next/navigation'
-import React from 'react'
-import { useEffect, useState } from 'react'
+import * as React from 'react';
+import Button from '@mui/material/Button';
+import CssBaseline from '@mui/material/CssBaseline';
+import Stack from '@mui/material/Stack';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Container from '@mui/material/Container';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { useAuth } from '@/hooks/useAuth';
+import { useRouter } from 'next/navigation';
+import { DialogTitle, FormControl, FormLabel, Input, Modal, ModalDialog } from '@mui/joy';
+
+function Copyright() {
+  return (
+    <Typography variant="body2" color="text.secondary" align="center">
+      {'Copyright © KSK'}
+      {new Date().getFullYear()}
+      {'.'}
+    </Typography>
+  );
+}
+
+const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+
+// TODO remove, this demo shouldn't need to reset the theme.
+const defaultTheme = createTheme();
 
 export default function Home() {
 
-  const [openJoinRoomPopup, setJoinRoomPopup] = useState(false);
-  const [openCreateRoomPupup, setOpenCreateRoomPopup] = useState(false);
+  const [openJoinRoomPopup, setJoinRoomPopup] = React.useState(false);
+  const [openCreateRoomPupup, setOpenCreateRoomPopup] = React.useState(false);
 
   const router = useRouter()
 
   const auth = useAuth();
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (!auth.auth.username) {
       router.push('/register');
     }
   }, [auth.auth.username, router])
-
 
   const joinRoom = (ev: any) => {
     fetch('/api/v1/join', {
@@ -32,7 +49,7 @@ export default function Home() {
       })
     }).then((val) => {
       if (val.status === 200) {
-        router.push('/room?id=' + ev.target[0].value);
+        router.push('/chat?id=' + ev.target[0].value);
       }
     })
   }
@@ -47,65 +64,96 @@ export default function Home() {
       debugger
       if (val.status === 200) {
         val.json().then((data) => {
-          router.push('/room?id=' + data.id);
+          router.push('/chat?id=' + data.id);
         });
       }
     })
   }
 
-  return (
-    <div className='flex h-full w-full align-items-center justify-items-center'>
-      <React.Fragment>
-        <Modal open={true}>
-          <ModalDialog size='lg' variant='soft' color='success'>
-            <ButtonGroup className='w-full'>
-              <Button className='w-1/2' onClick={() => setJoinRoomPopup(true)} size={'large'} startIcon={<DoorSlidingRounded />} color='primary' variant={'contained'}> Join Room </Button>
-              <Button className='w-1/2' onClick={() => setOpenCreateRoomPopup(true)} size={'large'} startIcon={<DoorSlidingRounded />} color='secondary' variant={'outlined'}> Create Room </Button>
-            </ButtonGroup>
-          </ModalDialog>
-        </Modal>
-      </React.Fragment>
-      <Modal open={openJoinRoomPopup} onClose={() => setJoinRoomPopup(false)}>
-        <ModalDialog>
-          <DialogTitle>Join Room</DialogTitle>
-          <form
-            onSubmit={(event: React.FormEvent<HTMLFormElement>) => {
-              event.preventDefault();
-              setJoinRoomPopup(false);
-              joinRoom(event);
-            }}
-          >
-            <Stack spacing={2}>
-              <FormControl>
-                <FormLabel>Room ID</FormLabel>
-                <Input autoFocus required />
-              </FormControl>
-              <Button type="submit">Join</Button>
-            </Stack>
-          </form>
-        </ModalDialog>
-      </Modal>
-      <Modal open={openCreateRoomPupup} onClose={() => setOpenCreateRoomPopup(false)}>
-        <ModalDialog>
-          <DialogTitle>Create Room</DialogTitle>
-          <form
-            onSubmit={(event: React.FormEvent<HTMLFormElement>) => {
-              event.preventDefault();
-              setOpenCreateRoomPopup(false);
-              createRoom(event)
-            }}
-          >
-            <Stack spacing={2}>
-              <FormControl>
-                <FormLabel>Room Name</FormLabel>
-                <Input autoFocus required />
-              </FormControl>
-              <Button type="submit">Create</Button>
-            </Stack>
-          </form>
-        </ModalDialog>
-      </Modal>
+  return (<>
 
-    </div>
-  )
+    <Modal open={openJoinRoomPopup} onClose={() => setJoinRoomPopup(false)}>
+      <ModalDialog>
+        <DialogTitle>Join Room</DialogTitle>
+        <form
+          onSubmit={(event: React.FormEvent<HTMLFormElement>) => {
+            event.preventDefault();
+            setJoinRoomPopup(false);
+            joinRoom(event);
+          }}
+        >
+          <Stack spacing={2}>
+            <FormControl>
+              <FormLabel>Room ID</FormLabel>
+              <Input autoFocus required />
+            </FormControl>
+            <Button type="submit">Join</Button>
+          </Stack>
+        </form>
+      </ModalDialog>
+    </Modal>
+    <Modal open={openCreateRoomPupup} onClose={() => setOpenCreateRoomPopup(false)}>
+      <ModalDialog>
+        <DialogTitle>Create Room</DialogTitle>
+        <form
+          onSubmit={(event: React.FormEvent<HTMLFormElement>) => {
+            event.preventDefault();
+            setOpenCreateRoomPopup(false);
+            createRoom(event)
+          }}
+        >
+          <Stack spacing={2}>
+            <FormControl>
+              <FormLabel>Room Name</FormLabel>
+              <Input autoFocus required />
+            </FormControl>
+            <Button type="submit">Create</Button>
+          </Stack>
+        </form>
+      </ModalDialog>
+    </Modal>
+    <ThemeProvider theme={defaultTheme}>
+      <CssBaseline />
+      <main>
+        {/* Hero unit */}
+        <Box
+          sx={{
+            bgcolor: 'background.paper',
+            pt: 8,
+            pb: 6,
+          }}
+        >
+          <Container maxWidth="sm">
+            <Typography
+              component="h1"
+              variant="h2"
+              align="center"
+              color="text.primary"
+              gutterBottom
+            >
+              CHIT CHAT
+            </Typography>
+            <Typography variant="h5" align="center" color="text.secondary" paragraph>
+              This is the best Chat application present out there on the earth.
+            </Typography>
+            <Stack
+              sx={{ pt: 4 }}
+              direction="row"
+              spacing={2}
+              justifyContent="center"
+            >
+              <Button onClick={() => setJoinRoomPopup(true)} variant="contained">Join Chat Group</Button>
+              <Button onClick={() => setOpenCreateRoomPopup(true)} variant="outlined">Create Chat Group</Button>
+            </Stack>
+          </Container>
+        </Box>
+      </main>
+      {/* Footer */}
+      <Box sx={{ bgcolor: 'background.paper', p: 6 }} component="footer">
+        <Copyright />
+      </Box>
+      {/* End footer */}
+    </ThemeProvider>
+  </>
+  );
 }

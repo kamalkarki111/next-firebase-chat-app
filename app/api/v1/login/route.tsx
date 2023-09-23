@@ -24,7 +24,7 @@ export const POST = async (request:any,response:NextApiResponse) => {
     if(isValidcall){
         return new Response(JSON.stringify(user),{status:200});
     } else {
-        return new Response('Invalid creds bro',{status:200});
+        return new Response('Invalid creds bro',{status:420});
     }
 
 }

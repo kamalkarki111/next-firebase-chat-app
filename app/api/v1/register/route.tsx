@@ -23,7 +23,7 @@ export const POST = async (request: any, response: NextApiResponse) => {
         user.save();
         return new Response(JSON.stringify(user), { status: 200 });
     } else {
-        return new Response('user name taken', { status: 200 });
+        return new Response('user name taken', { status: 420 });
     }
 
 
