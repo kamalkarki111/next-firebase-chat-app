@@ -91,7 +91,7 @@ export default function Home() {
         <form
           onSubmit={(event: React.FormEvent<HTMLFormElement>) => {
             event.preventDefault();
-            setJoinRoomPopup(false);ß
+            setJoinRoomPopup(false);
             joinRoom(event);
           }}
         >
