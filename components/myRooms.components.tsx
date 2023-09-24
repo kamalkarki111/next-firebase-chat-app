@@ -13,7 +13,8 @@ export default function MyRooms() {
     useEffect(() => {
         const unsub = db.collection('userRoomsInfo').doc(auth.username).collection('rooms').onSnapshot((val) => {
             const data = val.docs.map((val) => val.data())
-            setMyRooms(data)
+            setMyRooms(data);
+            console.log(data)
             return () => {
                 unsub()
             }

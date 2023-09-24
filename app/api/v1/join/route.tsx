@@ -18,7 +18,5 @@ export const POST = async (request: any, response: any) => {
         return new Response('Room ID not avaible', { status: 404 })
     }
 
-    db.collection('userRoomsInfo').doc(username).collection('rooms').add({name:room.name, id:room.id});
-
     return new Response(JSON.stringify({name:room.name, id:room.id}), { status: 200 });
 }

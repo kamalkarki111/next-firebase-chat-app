@@ -13,6 +13,7 @@ import { LoaderContext } from '@/context/loader.context';
 import { AuthContext } from '@/context/auth.context';
 import { ErrorContext } from '@/context/error.context';
 import MyRooms from '@/components/myRooms.components';
+import { db } from '@/lib/firebase';
 
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
@@ -38,6 +39,7 @@ export default function Home() {
       if (val.status === 200) {
         val.json().then((data) => {
           router.push('/chat?id=' + data.id + '&name=' + data.name);
+          db.collection('userRoomsInfo').doc(auth.username).collection('rooms').add({name:data.name, id:data.id});
         });
         LoaderService.setShowLoader(false)
       } else {
@@ -61,6 +63,7 @@ export default function Home() {
       if (val.status === 200) {
         val.json().then((data) => {
           router.push('/chat?id=' + data.id + '&name=' + data.name);
+          db.collection('userRoomsInfo').doc(auth.username).collection('rooms').add({name:data.name, id:data.id});
         });
         LoaderService.setShowLoader(false)
       } else {

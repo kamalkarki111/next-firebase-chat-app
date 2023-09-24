@@ -15,8 +15,6 @@ export const POST = async (request: any, response: any) => {
     const room = new Room({id:Date.now(), name});
 
     room.save();
-
-    db.collection('userRoomsInfo').doc(username).collection('rooms').add({name:room.name, id:room.id});
     
     return new Response(JSON.stringify(room),{status:200});
 
