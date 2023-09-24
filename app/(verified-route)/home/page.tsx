@@ -74,12 +74,14 @@ export default function Home() {
   }
 
   React.useEffect(() => {
-    db.collection('userRoomsInfo').doc(auth.username).collection('rooms').get().then((val) => {
+    const unsub = db.collection('userRoomsInfo').doc(auth.username).collection('rooms').onSnapshot((val) => {
       const data = val.docs.map((val) => val.data())
       setMyRooms(data)
-      console.log(data)
+      return ()=>{
+        unsub()
+      }
     })
-  })
+  },[])
 
   return (<>
 
