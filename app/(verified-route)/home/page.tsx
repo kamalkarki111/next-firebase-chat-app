@@ -74,12 +74,12 @@ export default function Home() {
   }
 
   React.useEffect(() => {
-    console.log(db.collection('userRoomsInfo').doc(auth.username).collection('rooms').get().then((val) => {
+    db.collection('userRoomsInfo').doc(auth.username).collection('rooms').get().then((val) => {
       const data = val.docs.map((val) => val.data())
       setMyRooms(data)
       console.log(data)
-    }))
-  }, [])
+    })
+  })
 
   return (<>
 
@@ -89,7 +89,7 @@ export default function Home() {
         <form
           onSubmit={(event: React.FormEvent<HTMLFormElement>) => {
             event.preventDefault();
-            setJoinRoomPopup(false);
+            setJoinRoomPopup(false);ß
             joinRoom(event);
           }}
         >
