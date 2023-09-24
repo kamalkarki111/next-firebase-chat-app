@@ -7,7 +7,7 @@ export default function ChatingPage() {
 
     return (
         <><>
-            <div className="flex-1 p:2 sm:p-6 justify-between flex flex-col h-full">
+            <div className="flex-1 p:2 sm:p-6 justify-between flex flex-col h-full overflow-auto">
                 <ChatHeader></ChatHeader>
                 <MessageHistory></MessageHistory>
                 <SendMessage></SendMessage>

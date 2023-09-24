@@ -6,28 +6,13 @@ export default function Footer() {
                     <span className="text-sm text-gray-500 sm:text-center dark:text-gray-400">
                         © 2023{" "}
                         <a href="https://flowbite.com/" className="hover:underline">
-                            Flowbite™
+                            KSK™
                         </a>
                         . All Rights Reserved.
                     </span>
                     <ul className="flex flex-wrap items-center mt-3 text-sm font-medium text-gray-500 dark:text-gray-400 sm:mt-0">
                         <li>
-                            <a href="#" className="mr-4 hover:underline md:mr-6 ">
-                                About
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" className="mr-4 hover:underline md:mr-6">
-                                Privacy Policy
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" className="mr-4 hover:underline md:mr-6">
-                                Licensing
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" className="hover:underline">
+                            <a href="https://calendly.com/kamalkarki8979/30min?month=2023-09" className="hover:underline">
                                 Contact
                             </a>
                         </li>
