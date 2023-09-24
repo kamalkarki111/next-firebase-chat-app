@@ -17,6 +17,8 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import Link from 'next/link';
 import { LoaderContext } from '@/context/loader.context';
+import { ErrorContext } from '@/context/error.context';
+import { error } from 'console';
 
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
@@ -26,6 +28,8 @@ export default function SignInSide() {
   const router = useRouter();
 
   const auth = useAuth();
+
+  const errors = React.useContext(ErrorContext)
 
   const Loader = React.useContext(LoaderContext);
 
@@ -44,22 +48,25 @@ export default function SignInSide() {
       }),
     }).then((response: any) => {
 
-      if(response.status === 200) {
+      if (response.status === 200) {
         response.json().then((data: any) => {
 
           if (data.username) {
-  
+
             auth.setAuth(data);
             router.push('/home');
-  
+
           }
           Loader.setShowLoader(false)
-  
+
         })
       } else {
-        Loader.setShowLoader(false)
+        response.text().then((val: any) => {
+          Loader.setShowLoader(false);
+          errors.setError(val)
+        })
       }
-      
+
     });
   };
 
@@ -137,7 +144,7 @@ export default function SignInSide() {
                     {"Don't have an account? Sign Up"}
                   </Link>
                 </Grid>
-              </Grid> 
+              </Grid>
             </Box>
           </Box>
         </Grid>

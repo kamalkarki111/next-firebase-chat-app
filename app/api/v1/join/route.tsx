@@ -1,9 +1,10 @@
 import dbConnect from "@/lib/dbConnection";
+import { db } from "@/lib/firebase";
 import Room from "@/models/room";
 
 export const POST = async (request: any, response: any) => {
 
-    let { id } = await request.json();
+    let { id , username} = await request.json();
 
     if (!id) {
         return new Response('ID is missing bro', { status: 420 })
@@ -17,5 +18,7 @@ export const POST = async (request: any, response: any) => {
         return new Response('Room ID not avaible', { status: 404 })
     }
 
-    return new Response("Valid Room ID", { status: 200 });
+    db.collection('userRoomsInfo').doc(username).collection('rooms').add({name:room.name, id:room.id});
+
+    return new Response(JSON.stringify({name:room.name, id:room.id}), { status: 200 });
 }

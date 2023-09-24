@@ -7,6 +7,8 @@ import Header from '@/components/header.component'
 import Footer from '@/components/footer.component'
 import Loader from './loader'
 import { Suspense } from 'react'
+import ErrorModal from '@/components/errorModal.component'
+import ErrorProvider from '@/context/error.context'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -23,16 +25,19 @@ export default function RootLayout({
 
   return (
     <html lang="en" style={{ height: '100%' }}>
-      <body style={{ height: '100%', display:'flex', flexDirection:'column' }}>
+      <body style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
         <LoaderProvider>
           <AuthProvider>
-            <Header/>
-            <Suspense fallback={<Loader/>}>
-              <div style={{flexGrow:'1'}}>
-                {children}
-              </div>
-            </Suspense>
-            <Footer/>
+            <ErrorProvider>
+              <Header />
+              <Suspense fallback={<Loader />}>
+                <div style={{ flexGrow: '1' }}>
+                  {children}
+                </div>
+              </Suspense>
+              <Footer />
+              <ErrorModal />
+            </ErrorProvider>
           </AuthProvider>
           <Loader />
         </LoaderProvider>

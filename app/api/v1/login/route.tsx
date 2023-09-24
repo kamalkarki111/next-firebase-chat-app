@@ -8,6 +8,10 @@ export const POST = async (request:any,response:NextApiResponse) => {
 
     const { username, password } = await request.json();
 
+    if(!username || !password){
+        return new Response('Something missing',{status:505});
+    }
+
     //db connection
     const conn = await dbConnect();
 

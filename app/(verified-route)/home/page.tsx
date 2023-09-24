@@ -7,12 +7,14 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { useAuth } from '@/hooks/useAuth';
 import { useRouter } from 'next/navigation';
 import { DialogTitle, FormControl, FormLabel, Input, Modal, ModalDialog } from '@mui/joy';
 import { LoaderContext } from '@/context/loader.context';
-
-const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+import { AuthContext } from '@/context/auth.context';
+import { db } from '@/lib/firebase';
+import Link from 'next/link';
+import { Groups3 } from '@mui/icons-material';
+import { ErrorContext } from '@/context/error.context';
 
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
@@ -22,8 +24,12 @@ export default function Home() {
   const [openJoinRoomPopup, setJoinRoomPopup] = React.useState(false);
   const [openCreateRoomPupup, setOpenCreateRoomPopup] = React.useState(false);
   const LoaderService = React.useContext(LoaderContext);
+  const { auth } = React.useContext(AuthContext);
+  const errors = React.useContext(ErrorContext);
 
-  const router = useRouter()
+  const router = useRouter();
+
+  const [myRooms, setMyRooms] = React.useState<Array<any>>([])
 
   const joinRoom = (ev: any) => {
     LoaderService.setShowLoader(true)
@@ -34,9 +40,16 @@ export default function Home() {
       })
     }).then((val) => {
       if (val.status === 200) {
-        router.push('/chat?id=' + ev.target[0].value);
+        val.json().then((data) => {
+          router.push('/chat?id=' + data.id + '&name=' + data.name);
+        });
+        LoaderService.setShowLoader(false)
+      } else {
+        val.text().then((val: any) => {
+          LoaderService.setShowLoader(false);
+          errors.setError(val)
+        })
       }
-      LoaderService.setShowLoader(false)
     })
   }
 
@@ -46,12 +59,12 @@ export default function Home() {
       method: "POST",
       body: JSON.stringify({
         name: ev.target[0].value,
+        username: auth.username
       })
     }).then((val) => {
-      debugger
       if (val.status === 200) {
         val.json().then((data) => {
-          router.push('/chat?id=' + data.id);
+          router.push('/chat?id=' + data.id + '&name=' + data.name);
         });
         LoaderService.setShowLoader(false)
       } else {
@@ -59,6 +72,14 @@ export default function Home() {
       }
     })
   }
+
+  React.useEffect(() => {
+    console.log(db.collection('userRoomsInfo').doc(auth.username).collection('rooms').get().then((val) => {
+      const data = val.docs.map((val) => val.data())
+      setMyRooms(data)
+      console.log(data)
+    }))
+  }, [])
 
   return (<>
 
@@ -139,7 +160,37 @@ export default function Home() {
         </Box>
       </main>
       {/* Footer */}
-      <Box sx={{ bgcolor: 'background.paper', p: 6 }} component="footer">
+      <Typography
+        component="h1"
+        variant="h4"
+        align="center"
+        color="brown"
+        gutterBottom
+      >
+        My Rooms
+      </Typography>
+      <Box sx={{ bgcolor: 'background.paper', p: 1, display: 'flex', flexWrap: 'wrap' }} component="footer">
+
+        {myRooms.map((room) => <div key={room.id} className="w-2/6 m-5 w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+          <div className="flex flex-col items-center pb-10">
+            <Groups3></Groups3>
+            <h5 className="mb-1 text-xl font-medium text-gray-900 dark:text-white">
+              {room.name}
+            </h5>
+            <span className="text-sm text-gray-500 dark:text-gray-400">
+              {room.id}
+            </span>
+            <div className="flex mt-4 space-x-3 md:mt-6">
+              <Link
+                href={'/chat?id=' + room.id + '&name=' + room.name}
+                className="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              >
+                Open
+              </Link>
+            </div>
+          </div>
+        </div>)}
+
       </Box>
       {/* End footer */}
     </ThemeProvider>

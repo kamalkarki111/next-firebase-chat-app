@@ -14,6 +14,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useRouter } from 'next/navigation';
 import { LoaderContext } from '@/context/loader.context';
 import Link from 'next/link';
+import { ErrorContext } from '@/context/error.context';
 
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
@@ -24,7 +25,9 @@ export default function SignUp() {
 
   const router = useRouter();
 
-  const Loader = React.useContext(LoaderContext)
+  const Loader = React.useContext(LoaderContext);
+
+  const errors = React.useContext(ErrorContext);
   
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
 
@@ -52,6 +55,10 @@ export default function SignUp() {
         })
       } else {
         Loader.setShowLoader(false)
+        response.text().then((val: any) => {
+          Loader.setShowLoader(false);
+          errors.setError(val)
+        })
       }
     },(err)=>{
       Loader.setShowLoader(false)
