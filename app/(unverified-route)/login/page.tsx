@@ -18,14 +18,6 @@ import { useAuth } from '@/hooks/useAuth';
 import Link from 'next/link';
 import { LoaderContext } from '@/context/loader.context';
 
-function Copyright(props: any) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © KSK'}
-    </Typography>
-  );
-}
-
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 
@@ -36,12 +28,6 @@ export default function SignInSide() {
   const auth = useAuth();
 
   const Loader = React.useContext(LoaderContext);
-
-  React.useEffect(() => {
-    if (auth.auth.username) {
-      router.push('/');
-    }
-  }, [auth.auth.username, router])
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -64,7 +50,7 @@ export default function SignInSide() {
           if (data.username) {
   
             auth.setAuth(data);
-            router.push('/');
+            router.push('/home');
   
           }
           Loader.setShowLoader(false)
@@ -147,12 +133,11 @@ export default function SignInSide() {
               </Button>
               <Grid container>
                 <Grid item>
-                  <Link href="/register" >
+                  <Link href={"/register"} >
                     {"Don't have an account? Sign Up"}
                   </Link>
                 </Grid>
-              </Grid>
-              <Copyright sx={{ mt: 5 }} />
+              </Grid> 
             </Box>
           </Box>
         </Grid>

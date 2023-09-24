@@ -1,13 +1,13 @@
 import dbConnect from "@/lib/dbConnection";
 import User from "@/models/user";
-import mongoose, { Mongoose, Schema } from "mongoose";
-import { NextApiRequest, NextApiResponse } from "next";
+import { Mongoose } from "mongoose";
+import { NextApiResponse } from "next";
 import { hash } from 'bcryptjs'
 
 export const POST = async (request: any, response: NextApiResponse) => {
 
-    const { username, password } = await request.json();
-
+    const { username, password, name } = await request.json();
+    console.log(name)
 
     //encryption of password
     const encryptedPassword = await hash(password, 12);
@@ -16,10 +16,9 @@ export const POST = async (request: any, response: NextApiResponse) => {
     const conn: Mongoose = await dbConnect();
 
     const isUsernameTaken = await User.findOne({ username })
-    console.log(isUsernameTaken)
 
     if (!isUsernameTaken) {
-        let user = new User({ username, password: encryptedPassword })
+        let user = new User({ username, password: encryptedPassword,fname:name })
         user.save();
         return new Response(JSON.stringify(user), { status: 200 });
     } else {

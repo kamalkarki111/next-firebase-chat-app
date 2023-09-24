@@ -4,9 +4,6 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
@@ -16,16 +13,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useAuth } from '@/hooks/useAuth';
 import { useRouter } from 'next/navigation';
 import { LoaderContext } from '@/context/loader.context';
-
-function Copyright(props: any) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © KSK'}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
+import Link from 'next/link';
 
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
@@ -35,12 +23,6 @@ export default function SignUp() {
   const auth = useAuth();
 
   const router = useRouter();
-
-  React.useEffect(() => {
-    if (auth.auth.username) {
-      router.push('/');
-    }
-  }, [auth.auth.username, router])
 
   const Loader = React.useContext(LoaderContext)
   
@@ -55,7 +37,8 @@ export default function SignUp() {
       method: "POST",
       body: JSON.stringify({
         username: data.get('username'),
-        password: data.get('password')
+        password: data.get('password'),
+        name: data.get('name')
       }),
     }).then((response: any) => {
       if(response.status === 200){
@@ -63,7 +46,7 @@ export default function SignUp() {
         response.json().then((data: any) => {
           if (data.username) {
             auth.setAuth(data);
-            router.push('/');
+            router.push('/home');
           }
           Loader.setShowLoader(false)
         })
@@ -97,6 +80,16 @@ export default function SignUp() {
           </Typography>
           <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
             <Grid container spacing={2}>
+            <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  id="name"
+                  label="Full Name "
+                  name="name"
+                  autoComplete="username"
+                />
+              </Grid>
               <Grid item xs={12}>
                 <TextField
                   required
@@ -137,7 +130,6 @@ export default function SignUp() {
             </Grid>
           </Box>
         </Box>
-        <Copyright sx={{ mt: 5 }} />
       </Container>
     </ThemeProvider>
   );

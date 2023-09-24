@@ -6,6 +6,7 @@ import { LoaderProvider } from '@/context/loader.context'
 import Header from '@/components/header.component'
 import Footer from '@/components/footer.component'
 import Loader from './loader'
+import { Suspense } from 'react'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -22,11 +23,15 @@ export default function RootLayout({
 
   return (
     <html lang="en" style={{ height: '100%' }}>
-      <body style={{ height: '100%' }}>
+      <body style={{ height: '100%', display:'flex', flexDirection:'column' }}>
         <LoaderProvider>
           <AuthProvider>
             <Header/>
-            {children}
+            <Suspense fallback={<Loader/>}>
+              <div style={{flexGrow:'1'}}>
+                {children}
+              </div>
+            </Suspense>
             <Footer/>
           </AuthProvider>
           <Loader />
