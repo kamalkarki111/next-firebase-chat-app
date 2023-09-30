@@ -35,5 +35,17 @@ pnpm dev
 
 # Note: Any Improvement or any bug Fixes are most welcomed
 
+## Live Demo : 
+
+https://secret-chat-gules.vercel.app/
+
+## ScreenShots
+
+![alt text](./public/demo.png)
+
+![alt text](./public/demo2.png)
+
+
+
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
