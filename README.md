@@ -25,9 +25,9 @@ pnpm dev
 ```
 # Contribution
 
-## By Submiting the PR for Below Feature Request.
-## By Identifing the issue and raising them and adding appropriate tags.
-## By Adding the Documention
+### By Submiting the PR for Below Feature Request.
+### By Identifing the issue and raising them and adding appropriate tags.
+### By Adding the Documention
 
 
 ## Features Request
