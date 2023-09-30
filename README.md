@@ -1,5 +1,7 @@
 ### Hello Hacktober fest peoples Please Move to Feature Request Tab 
 
+# Demo URL https://secret-chat-gules.vercel.app/
+
 ### Set Up
 
 ## Mongo DB URI 
@@ -21,6 +23,12 @@ yarn dev
 # or
 pnpm dev
 ```
+# Contribution
+
+## By Submiting the PR for Below Feature Request.
+## By Identifing the issue and raising them and adding appropriate tags.
+## By Adding the Documention
+
 
 ## Features Request
 
